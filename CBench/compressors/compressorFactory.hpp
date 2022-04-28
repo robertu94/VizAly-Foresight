@@ -70,6 +70,11 @@ class CompressorFactory
 			return new FPZIPCompressor();
 	  #endif
 
+#ifdef CBENCH_HAS_LIBPRESSIO
+		if (compressorName == "libpressio")
+			return new LibPressioCompressor();
+#endif
+
 		  return NULL;
 	}
 };

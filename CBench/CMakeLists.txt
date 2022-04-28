@@ -4,6 +4,7 @@ project(CBench)
 
 set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel.")
+set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # add libs
 set (EXTRA_LIBS "")
@@ -145,7 +146,6 @@ foreach(f ${header_files})
 endforeach()
 file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/compressors/compressorIncludes.h ${incls})
 
-
 # Add external compressors
 include_directories(${CMAKE_SOURCE_DIR}/compressors)
 file(GLOB subdir "${CMAKE_SOURCE_DIR}/compressors/*")
@@ -193,7 +193,6 @@ foreach (dir ${subdir})
 endforeach()
 
 
-
 # MPI
 find_package(MPI)
 if (MPI_FOUND)
@@ -226,6 +225,12 @@ endif()
 # Build executable
 add_executable(CBench main.cpp)
 target_link_libraries(CBench ${MPI_LIBRARIES} ${EXTRA_LIBS} GenericIO)
+
+if(CBENCH_HAS_LIBPRESSIO)
+  find_package(LibPressio REQUIRED)
+  find_package(std_compat REQUIRED)
+  target_link_libraries(CBench LibPressio::libpressio)
+endif()
 
 
 # Install instructions
